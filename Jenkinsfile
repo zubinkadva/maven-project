@@ -29,19 +29,19 @@ stages{
         }
 
         stage ('Deployments'){
-            parallel{
-                stage ('Deploy to Staging'){
-                    steps {
-                        bat '"C:/Program Files (x86)/WinSCP/winscp" -i C:/Users/zubin.kadva/Downloads/tomcat-demo.pem **/target/*.war ec2-user@${params.tomcat_dev}:/var/lib/tomcat7/webapps'
-                    }
-                }
+                    parallel{
+                        stage ('Deploy to Staging'){
+                            steps {
+                                bat "scp -i /home/jenkins/tomcat-demo.pem **/target/*.war ec2-user@${params.tomcat_dev}:/var/lib/tomcat7/webapps"
+                            }
+                        }
 
-                stage ("Deploy to Production"){
-                    steps {
-                        bat '"C:/Program Files (x86)/WinSCP/winscp" -i C:/Users/zubin.kadva/Downloads/tomcat-demo.pem **/target/*.war ec2-user@${params.tomcat_prod}:/var/lib/tomcat7/webapps'
+                        stage ("Deploy to Production"){
+                            steps {
+                                bat "scp -i /home/jenkins/tomcat-demo.pem **/target/*.war ec2-user@${params.tomcat_prod}:/var/lib/tomcat7/webapps"
+                            }
+                        }
                     }
                 }
-            }
-        }
     }
 }
