@@ -36,11 +36,7 @@ stages{
                             }
                         }
 
-                        stage ("Deploy to Production"){
-                            steps {
-                                bat 'pscp -i C:/Users/zubin.kadva/Downloads/tomcat-demo.pem "C:/Program Files (x86)/Jenkins/workspace/fully-automated/webapp/target/*.war" ec2-user@${params.tomcat_prod}:/var/lib/tomcat7/webapps'
-                            }
-                        }
+
                     }
                 }
     }
