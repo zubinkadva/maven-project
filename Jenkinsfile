@@ -1,16 +1,10 @@
 pipeline {
     agent any
-
-    parameters {
-         string(name: 'tomcat_dev', defaultValue: '13.59.206.203', description: 'Staging Server')
-         string(name: 'tomcat_prod', defaultValue: '18.216.239.84', description: 'Production Server')
+    tools {
+        maven 'Local Maven'
+        jdk 'Local JDK'
     }
-
-    triggers {
-         pollSCM('* * * * *')
-     }
-
-stages{
+    stages{
         stage('Build'){
             steps {
                 bat 'mvn clean package'
@@ -22,21 +16,31 @@ stages{
                 }
             }
         }
+        stage ('Deploy to Staging'){
+            steps {
+                build job: 'deploy-to-staging'
+            }
+        }
 
-        stage ('Deployments'){
-            parallel{
-                stage ('Deploy to Staging'){
-                    steps {
-                        bat "cp -i C:/Users/zubin.kadva/Downloads/tomcat-demo.pem **/target/*.war ec2-user@${params.tomcat_dev}:/var/lib/tomcat7/webapps"
-                    }
+        stage ('Deploy to Production'){
+            steps{
+                timeout(time:5, unit:'DAYS'){
+                    input message:'Approve PRODUCTION Deployment?'
                 }
 
-                stage ("Deploy to Production"){
-                    steps {
-                        bat "cp -i C:/Users/zubin.kadva/Downloads/tomcat-demo.pem **/target/*.war ec2-user@${params.tomcat_prod}:/var/lib/tomcat7/webapps"
-                    }
+                build job: 'deploy-to-prod'
+            }
+            post {
+                success {
+                    echo 'Code deployed to Production.'
+                }
+
+                failure {
+                    echo ' Deployment failed.'
                 }
             }
         }
+
+
     }
 }
