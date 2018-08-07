@@ -29,13 +29,13 @@ pipeline {
             parallel {
                 stage ('Deploy to Staging') {
                     steps {
-                        bat "echo y | pscp -scp -i C:/Users/zubin.kadva/Downloads/tomcat-demo-private.ppk \"C:/Program Files (x86)/Jenkins/workspace/fully-automated/webapp/target/*.war\" ec2-user@${params.tomcat_dev}:/var/lib/tomcat7/webapps"
+                        bat "echo y | pscp -scp -i C:/Users/zubin.kadva/Downloads/UdemyJenkins/tomcat-demo-private.ppk \"C:/Program Files (x86)/Jenkins/workspace/fully-automated/webapp/target/*.war\" ec2-user@${params.tomcat_dev}:/var/lib/tomcat7/webapps"
                     }
                 }
 
                 stage ("Deploy to Production") {
                     steps {
-                        bat "echo y | pscp -scp -i C:/Users/zubin.kadva/Downloads/tomcat-demo-private.ppk \"C:/Program Files (x86)/Jenkins/workspace/fully-automated/webapp/target/*.war\" ec2-user@${params.tomcat_prod}:/var/lib/tomcat7/webapps"
+                        bat "echo y | pscp -scp -i C:/Users/zubin.kadva/Downloads/UdemyJenkins/tomcat-demo-private.ppk \"C:/Program Files (x86)/Jenkins/workspace/fully-automated/webapp/target/*.war\" ec2-user@${params.tomcat_prod}:/var/lib/tomcat7/webapps"
                     }
                 }
             }
